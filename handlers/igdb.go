@@ -39,15 +39,23 @@ func (handleManager *HandleManager) HandleSearchByID(apiManager *igdb.APIManager
 		idString := ctx.Param("igdbid")
 		id, err := strconv.Atoi(idString)
 		if err != nil {
-			fmt.Println(err)
+			ctx.JSON(http.StatusBadRequest, models.Error{
+				ErrorMessage: "Error parsing " + idString + " to int",
+				StatusCode: http.StatusBadRequest,
+			})
 			return
 		}
-		gameData, err := apiManager.GetGameData(id)
-		if err != nil {
-			fmt.Println(err)
-			return
+		metadata := handleManager.CachingManager.GetMetadataFromDB(id)
+		// If the entry is not in db fetch from igdb
+		if metadata == nil {
+			metadata, err = apiManager.GetGameData(id)
+			if err != nil {
+				fmt.Println(err)
+				return
+			}
+			handleManager.CachingManager.AddMetadataToDB(metadata)
+			fmt.Println("not in db... fetching from igdb")
 		}
-		handleManager.CachingManager.AddMetadataToDatabase(gameData)
-		ctx.JSON(http.StatusOK, gameData)
+		ctx.JSON(http.StatusOK, metadata)
 	}
 }
