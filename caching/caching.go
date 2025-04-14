@@ -6,6 +6,7 @@ import (
 	"github.com/PhoebeSoftware/exhibition-proxy-library/exhibition-proxy-library/igdb"
 	"gorm.io/driver/sqlite"
 	"gorm.io/gorm"
+	"gorm.io/gorm/clause"
 )
 
 type CachingManager struct {
@@ -31,12 +32,11 @@ func (cachingManager *CachingManager) AddMetadataToDatabase(metadata igdb.Metada
 	db := cachingManager.DB
 
 	dbMetadata := MetadataToDBMetadata(metadata)
-	result := db.Where("igdb_id = ?", dbMetadata.IGDBID).First(&db_models.DBMetadata{})
-	// Throws error if cannot find entry
-	if result.Error == nil {
-		return
-	}
-	db.Create(dbMetadata)
+	db.Clauses(clause.OnConflict{
+		Columns:   []clause.Column{{Name: "igdb_id"}},
+		DoNothing: true,
+	}).Create(&dbMetadata)
+
 }
 
 func ConvertToApiGame(dbGame *db_models.DBMetadata) {
@@ -60,6 +60,7 @@ func ConvertIGDBGenreToDBGenre(genreList []igdb.Genre) []db_models.Genre {
 	for _, genre := range genreList {
 		result = append(result, db_models.Genre{
 			GenreID: genre.GenreID,
+			Name: genre.Name,
 		})
 	}
 	return result

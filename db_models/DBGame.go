@@ -10,8 +10,7 @@ type Image struct {
 }
 
 type Genre struct {
-	gorm.Model
-	GenreID int    `json:"id"`
+	GenreID int    `json:"id" gorm:"primaryKey"`
 	Name    string `json:"name"`
 }
 
