@@ -26,12 +26,15 @@ func (handleManager *HandleManager) HandleSearchByName(apiManager *igdb.APIManag
 			return
 		}
 
-		gameDataList, err := apiManager.GetGames(name)
+		metadataList, err := apiManager.GetGames(name)
 		if err != nil {
 			fmt.Println(err)
 			return
 		}
-		ctx.JSON(http.StatusOK, gameDataList)
+		ctx.JSON(http.StatusOK, metadataList)
+		for _, metadata := range metadataList {
+			handleManager.CachingManager.AddMetadataToDB(&metadata)
+		}
 	}
 }
 func (handleManager *HandleManager) HandleSearchByID(apiManager *igdb.APIManager) gin.HandlerFunc {
