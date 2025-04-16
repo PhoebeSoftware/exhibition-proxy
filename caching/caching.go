@@ -1,9 +1,12 @@
 package caching
 
 import (
+	"database/sql"
 	"errors"
 	"fmt"
 	"github.com/PhoebeSoftware/exhibition-proxy-library/exhibition-proxy-library/igdb"
+	"github.com/agnivade/levenshtein"
+	"github.com/mattn/go-sqlite3"
 	"gorm.io/driver/sqlite"
 	"gorm.io/gorm"
 	"gorm.io/gorm/clause"
@@ -14,9 +17,26 @@ type CachingManager struct {
 }
 
 func (cachingManager *CachingManager) DBInit() error {
-	db, err := gorm.Open(sqlite.Open("./cache.db"), &gorm.Config{})
+	const driverName = "sqlite3_with_levenshtein"
+	sql.Register(driverName, &sqlite3.SQLiteDriver{
+		ConnectHook: func(conn *sqlite3.SQLiteConn) error {
+			return conn.RegisterFunc("levenshtein", func(a, b string) int {
+				return levenshtein.ComputeDistance(a, b)
+			}, true)
+		},
+	})
+
+	// Use that custom driver when opening the DB
+	db, err := gorm.Open(sqlite.Dialector{
+		DriverName: driverName,
+		DSN:        "file:cache.db?cache=shared&mode=rwc", // Can adjust DSN as needed
+	}, &gorm.Config{})
+
 	if err != nil {
-		return fmt.Errorf("Error opening database: %w", err)
+		return fmt.Errorf("error opening database: %w", err)
+	}
+	if db == nil {
+		panic("db is nil DBInit()")
 	}
 
 	err = db.AutoMigrate(&igdb.Metadata{})
@@ -27,8 +47,27 @@ func (cachingManager *CachingManager) DBInit() error {
 	fmt.Println("Successfully connected to database: " + db.Name())
 	return nil
 }
+func (cachingManager *CachingManager) GetMetadataListFromDBbyName(name string) []igdb.Metadata {
+	db := cachingManager.DB
+	var metadataList []igdb.Metadata
+	var ids []uint
+	db.Raw(`
+    SELECT id FROM metadata
+    WHERE name LIKE ? OR levenshtein(lower(name), lower(?)) <= ?`,
+	"%"+name+"%", name, 5).Scan(&ids)
+	fmt.Println(ids)
+	if len(ids) > 0 {
+		db.
+			Preload("Cover").
+			Preload("Artworks").
+			Preload("Screenshots").
+			Preload("Genres").Find(&metadataList, ids)
+	}
 
-func (cachingManager *CachingManager) GetMetadataFromDB(id int) *igdb.Metadata {
+	return metadataList
+}
+
+func (cachingManager *CachingManager) GetMetadataFromDBbyID(id int) *igdb.Metadata {
 	db := cachingManager.DB
 	var metadata igdb.Metadata
 	result := db.

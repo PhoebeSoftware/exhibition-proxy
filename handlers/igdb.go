@@ -14,7 +14,6 @@ type HandleManager struct {
 	CachingManager *caching.CachingManager
 }
 
-
 func (handleManager *HandleManager) HandleSearchByName(apiManager *igdb.APIManager) gin.HandlerFunc {
 	return func(ctx *gin.Context) {
 		name := ctx.Query("name")
@@ -25,16 +24,25 @@ func (handleManager *HandleManager) HandleSearchByName(apiManager *igdb.APIManag
 			})
 			return
 		}
-
-		metadataList, err := apiManager.GetGames(name)
-		if err != nil {
-			fmt.Println(err)
+		metadataList := handleManager.CachingManager.GetMetadataListFromDBbyName(name)
+		if metadataList == nil {
+			newEntries, err := apiManager.GetGames(name)
+			if err != nil {
+				ctx.JSON(http.StatusBadRequest, models.Error{
+					ErrorMessage: "Error finding games on IGDB side",
+					StatusCode:   http.StatusBadRequest,
+				})
+				return
+			}
+			fmt.Println("Adding game to local db:", name)
+			for _, metadata := range newEntries {
+				handleManager.CachingManager.AddMetadataToDB(&metadata)
+			}
+			metadataList = handleManager.CachingManager.GetMetadataListFromDBbyName(name)
+			ctx.JSON(http.StatusOK, metadataList)
 			return
 		}
 		ctx.JSON(http.StatusOK, metadataList)
-		for _, metadata := range metadataList {
-			handleManager.CachingManager.AddMetadataToDB(&metadata)
-		}
 	}
 }
 func (handleManager *HandleManager) HandleSearchByID(apiManager *igdb.APIManager) gin.HandlerFunc {
@@ -44,11 +52,11 @@ func (handleManager *HandleManager) HandleSearchByID(apiManager *igdb.APIManager
 		if err != nil {
 			ctx.JSON(http.StatusBadRequest, models.Error{
 				ErrorMessage: "Error parsing " + idString + " to int",
-				StatusCode: http.StatusBadRequest,
+				StatusCode:   http.StatusBadRequest,
 			})
 			return
 		}
-		metadata := handleManager.CachingManager.GetMetadataFromDB(id)
+		metadata := handleManager.CachingManager.GetMetadataFromDBbyID(id)
 		// If the entry is not in db fetch from igdb
 		if metadata == nil {
 			metadata, err = apiManager.GetGameData(id)
