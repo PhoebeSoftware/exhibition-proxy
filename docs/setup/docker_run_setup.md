@@ -1,4 +1,9 @@
 # Docker run setup
+
+# Prerequisites
+- IGDB client and secret you do not need an auth token ([Click here to create your client and secret](https://api-docs.igdb.com/#getting-started))
+- [Docker](https://www.docker.com/)
+
 1. Pull the image
 ```bash
 docker pull ghcr.io/phoebesoftware/exhibition-proxy:latest

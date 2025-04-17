@@ -1,5 +1,10 @@
 # Compile sources
 
+# Prerequisites
+- IGDB client and secret you do not need an auth token ([Click here to create your client and secret](https://api-docs.igdb.com/#getting-started))
+- [Docker](https://www.docker.com/)
+- Go 1.24.1
+
 1. Clone the repository
 ```bash
 git clone git@github.com:PhoebeSoftware/exhibition-proxy.git
@@ -33,7 +38,7 @@ Failed to launch: Please fill in the IGDB client and secret
 ```
 5. Run the program again 
 ```bash
-cd src
+cd ../src
 go run .
 ```
-6. Done. Congratulations!!!
+6. Done! Congratulations!!!

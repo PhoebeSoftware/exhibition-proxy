@@ -1,6 +1,7 @@
+# Example docker-compose.yml
 services:
   exhibition-proxy:
-    image: "exhibition-proxy"
+    image: "ghcr.io/phoebesoftware/exhibition-proxy:latest"
     ports:
       - "12345:12345"
     # Its very useful to bind the data folder because the proxy-settings.yml is in /usr/local/app/data

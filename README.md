@@ -2,7 +2,7 @@
 The HTTP api responsible for handling game metadata requests for clients from IGDB.
 
 # Prerequisites
-- IGDB client and secret you do not need the auth token we will do that for you ([Click here to create your client and secret](https://api-docs.igdb.com/#getting-started))
+- IGDB client and secret you do not need a auth token ([Click here to create your client and secret](https://api-docs.igdb.com/#getting-started))
 - [Docker](https://www.docker.com/)
 
 # Setup
@@ -12,4 +12,4 @@ The HTTP api responsible for handling game metadata requests for clients from IG
 
 
 # FAQ
-- idk no one asked anything
+- TO:DO

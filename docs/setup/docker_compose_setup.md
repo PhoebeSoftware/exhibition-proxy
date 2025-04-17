@@ -1,5 +1,10 @@
 # Docker compose setup (Recommended)
 
+# Prerequisites
+- IGDB client and secret you do not need an auth token ([Click here to create your client and secret](https://api-docs.igdb.com/#getting-started))
+- [Docker](https://www.docker.com/)
+- [Docker compose](https://docs.docker.com/compose/install/)
+
 1. Pull the image
 ```bash
 docker pull ghcr.io/phoebesoftware/exhibition-proxy:latest
