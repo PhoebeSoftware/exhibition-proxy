@@ -1,4 +1,4 @@
-# Build the docker image yourself (Docker Compose)
+# Docker compose setup
 
 1. Pull the image
 ```bash
@@ -16,11 +16,11 @@ services:
     volumes:
       - ./data:/usr/local/app/data
 ```
-3.Run the docker compose.yml in the same directory to generate the config
+3. Run the docker compose.yml in the same directory to generate the config
 ```bash
-docker compose up -d
+docker compose up
 ```
-4.Update the proxy-settings.yml
+4. Update the proxy-settings.yml
 ```json
 {
   "igdb_settings": {

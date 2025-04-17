@@ -25,7 +25,6 @@ func main() {
 		return
 	}
 
-	fmt.Println(filepath.Abs(dataPath))
 	proxy := exhibition_proxy_library.Proxy{
 		SettingsPath: filepath.Join(dataPath, "proxy-settings.json"),
 	}
