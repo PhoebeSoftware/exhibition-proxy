@@ -1,10 +1,12 @@
 # Compile sources
+Run the proxy from binary source. We recommend using [Docker compose](docker_compose_setup.md)
 
-# Prerequisites
+
+## Prerequisites
 - IGDB client and secret you do not need an auth token ([Click here to create your client and secret](https://api-docs.igdb.com/#getting-started))
 - [Docker](https://www.docker.com/)
 - Go 1.24.1
-
+## Setup
 1. Clone the repository
 ```bash
 git clone git@github.com:PhoebeSoftware/exhibition-proxy.git

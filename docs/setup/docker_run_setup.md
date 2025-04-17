@@ -1,8 +1,12 @@
 # Docker run setup
+Run the proxy in a docker container.
 
-# Prerequisites
+## Prerequisites
 - IGDB client and secret you do not need an auth token ([Click here to create your client and secret](https://api-docs.igdb.com/#getting-started))
 - [Docker](https://www.docker.com/)
+
+## Setup
+
 
 1. Pull the image
 ```bash
