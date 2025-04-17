@@ -26,6 +26,7 @@ func (handleManager *HandleManager) HandleSearchByName(apiManager *igdb.APIManag
 			return
 		}
 		metadataList := handleManager.CachingManager.GetMetadataListFromDBbyName(name)
+		// If the entry is not in db fetch from igdb
 		if metadataList == nil {
 			newEntries, err := apiManager.GetGames(name)
 			if err != nil {
@@ -36,12 +37,19 @@ func (handleManager *HandleManager) HandleSearchByName(apiManager *igdb.APIManag
 				log.Fatal(err)
 				return
 			}
-			fmt.Println("Adding game to local db:", name)
-			for _, metadata := range newEntries {
-				handleManager.CachingManager.AddMetadataToDB(&metadata)
+			if len(newEntries) > 0 {
+				for _, metadata := range newEntries {
+					handleManager.CachingManager.AddMetadataToDB(&metadata)
+					fmt.Println("Adding game to local db:", metadata.Name)
+				}
+				metadataList = handleManager.CachingManager.GetMetadataListFromDBbyName(name)
+				ctx.JSON(http.StatusOK, metadataList)
+				return
 			}
-			metadataList = handleManager.CachingManager.GetMetadataListFromDBbyName(name)
-			ctx.JSON(http.StatusOK, metadataList)
+			ctx.JSON(http.StatusBadRequest, models.Error{
+				StatusCode: http.StatusBadRequest,
+				ErrorMessage: "No games found with by this name",
+			})
 			return
 		}
 		ctx.JSON(http.StatusOK, metadataList)
