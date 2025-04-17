@@ -1,4 +1,4 @@
-# Docker compose setup
+# Docker compose setup (Recommended)
 
 1. Pull the image
 ```bash
@@ -8,27 +8,28 @@ docker pull ghcr.io/phoebesoftware/exhibition-proxy:latest
 ```yaml
 # Example docker-compose.yml
 services:
-  ghcr.io/phoebesoftware/exhibition-proxy:latest:
-    image: "exhibition-proxy"
+  exhibition-proxy:
+    image: "ghcr.io/phoebesoftware/exhibition-proxy:latest"
     ports:
       - "12345:12345"
     # Its very useful to bind the data folder because the proxy-settings.yml is in /usr/local/app/data
     volumes:
-      - ./data:/usr/local/app/data
-    # If you want to change the directory where the data is stored you can do so via env
+      - ./data:/data
     environment:
-      - DATA_PATH=/usr/local/app/data
+      # Default is /data but you can change it here if you desire
+      # Note this changes the path in your docker container not on the root
+      - DATA_PATH=/data
 ```
-3. Run the docker compose.yml in the same directory to generate the config
+3. Run the docker-compose.yml to generate the config
 ```bash
 docker compose up
 ```
 NOTE: Supposed to crash with this message:
 ```bash
-Failed to launch: Please fill in the IGDB client and secret
 Config file path: data/proxy-settings.json
+Failed to launch: Please fill in the IGDB client and secret
 ```
-4. Update the proxy-settings.yml
+4. Configure the settings found in ./data/proxy-settings.json
 ```json
 {
   "igdb_settings": {
@@ -40,8 +41,8 @@ Config file path: data/proxy-settings.json
   "port": 12345
 }
 ```
-7. Run the docker compose.yml in the same directory to start the server
+5. Run the docker compose.yml in the same directory to start the server
 ```bash
 docker compose up -d
 ```
-8. Done. Congratulations!!!
+6. Done. Congratulations!!!

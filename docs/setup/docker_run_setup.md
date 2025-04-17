@@ -3,11 +3,16 @@
 ```bash
 docker pull ghcr.io/phoebesoftware/exhibition-proxy:latest
 ```
-2. Run the container to generate the files
+2. Run the container to generate the config
 ```bash
-docker run --name exhibition-proxy --volume ./data:/usr/local/app/data -p 12345:12345 ghcr.io/phoebesoftware/exhibition-proxy:latest 
+docker run --name exhibition-proxy --volume ./data:/data -p 12345:12345 ghcr.io/phoebesoftware/exhibition-proxy:latest 
 ```
-3. Configure the settings
+NOTE: Supposed to crash with this message:
+```bash
+Config file path: data/proxy-settings.json
+Failed to launch: Please fill in the IGDB client and secret
+```
+3. Configure the settings found in ./data/proxy-settings.json
 ```json
 {
   "igdb_settings": {
