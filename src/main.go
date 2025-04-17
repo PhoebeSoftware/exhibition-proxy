@@ -7,33 +7,16 @@ import (
 	"github.com/PhoebeSoftware/exhibition-proxy-library/exhibition-proxy-library"
 	"github.com/PhoebeSoftware/exhibition-proxy-library/exhibition-proxy-library/igdb"
 	"github.com/gin-gonic/gin"
-	"github.com/joho/godotenv"
-	"os"
 	"path/filepath"
 	"strconv"
 )
 
 func main() {
-	godotenv.Load()
-
-	dataPath := os.Getenv("DATA_PATH")
-	if dataPath == "" {
-		dataPath = filepath.Join(".", "data")
-	}
-
-	if err := os.MkdirAll(dataPath, 0777); err != nil {
-		fmt.Println(err)
-		fmt.Println("Could not create path: " + dataPath)
-		return
-	}
-
-	proxy := exhibition_proxy_library.Proxy{
-		SettingsPath: filepath.Join(dataPath, "proxy-settings.json"),
-	}
+	proxy := exhibition_proxy_library.Proxy{}
 	proxy.Init()
 
 	cachingManager := caching.CachingManager{
-		CacheDBPath: filepath.Join(dataPath, "cache.db"),
+		CacheDBPath: filepath.Join(proxy.DataPath, "cache.db"),
 	}
 	err := cachingManager.DBInit()
 	if err != nil {
@@ -45,6 +28,9 @@ func main() {
 }
 
 func StartHttpServer(p *exhibition_proxy_library.Proxy, cachingManager *caching.CachingManager) {
+	if !p.Settings.DebugMode {
+		gin.SetMode(gin.ReleaseMode)
+	}
 	router := gin.Default()
 	apiManager, err := igdb.NewAPI(p.Settings, p.SettingsManger)
 	if err != nil {
