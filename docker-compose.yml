@@ -5,4 +5,8 @@ services:
       - "12345:12345"
     # Its very useful to bind the data folder because the proxy-settings.yml is in /usr/local/app/data
     volumes:
-      - ./data:/usr/local/app/data
+      - ./data:/data
+    environment:
+      # Default is /data but you can change it here if you desire
+      # Note this changes the path in your docker container not on the root
+      - DATA_PATH=/data

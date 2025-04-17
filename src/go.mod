@@ -3,7 +3,7 @@ module exhibtion-proxy
 go 1.24.1
 
 require (
-	github.com/PhoebeSoftware/exhibition-proxy-library v0.0.0-20250417173441-6f4a644c4f89 // indirect
+	github.com/PhoebeSoftware/exhibition-proxy-library v0.0.0-20250417185408-6c79870596ef // indirect
 	github.com/agnivade/levenshtein v1.2.1 // indirect
 	github.com/bytedance/sonic v1.13.2 // indirect
 	github.com/bytedance/sonic/loader v0.2.4 // indirect
