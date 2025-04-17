@@ -64,8 +64,8 @@ func (handleManager *HandleManager) HandleSearchByID(apiManager *igdb.APIManager
 				fmt.Println(err)
 				return
 			}
+			fmt.Println("Adding game to local db:", metadata.Name)
 			handleManager.CachingManager.AddMetadataToDB(metadata)
-			fmt.Println("not in db... fetching from igdb")
 		}
 		ctx.JSON(http.StatusOK, metadata)
 	}
