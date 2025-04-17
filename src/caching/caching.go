@@ -86,7 +86,9 @@ func (cachingManager *CachingManager) GetMetadataListFromDBbyName(name string) [
     WHERE name LIKE ? OR levenshtein(lower(name), lower(?)) <= ?`,
 	"%"+name+"%", name, 2).Scan(&ids)
 	// Limit to 20 ids
-	ids = ids[:20]
+	if len(ids) >= 20 {
+		ids = ids[:20]
+	}
 	if len(ids) > 0 {
 		db.
 			Preload("Cover").

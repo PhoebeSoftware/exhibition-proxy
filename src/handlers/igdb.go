@@ -43,7 +43,6 @@ func (handleManager *HandleManager) HandleSearchByName(apiManager *igdb.APIManag
 				}
 				metadataList = handleManager.CachingManager.GetMetadataListFromDBbyName(name)
 				ctx.JSON(http.StatusOK, metadataList)
-				fmt.Println("Added new items", metadataList)
 				return
 			}
 			ctx.JSON(http.StatusBadRequest, proxy_models.Error{
