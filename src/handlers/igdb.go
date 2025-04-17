@@ -4,9 +4,8 @@ import (
 	"exhibtion-proxy/caching"
 	"fmt"
 	"github.com/PhoebeSoftware/exhibition-proxy-library/exhibition-proxy-library/igdb"
-	"github.com/PhoebeSoftware/exhibition-proxy-library/exhibition-proxy-library/models"
+	"github.com/PhoebeSoftware/exhibition-proxy-library/exhibition-proxy-library/proxy_models"
 	"github.com/gin-gonic/gin"
-	"log"
 	"net/http"
 	"strconv"
 )
@@ -19,7 +18,7 @@ func (handleManager *HandleManager) HandleSearchByName(apiManager *igdb.APIManag
 	return func(ctx *gin.Context) {
 		name := ctx.Query("name")
 		if name == "" {
-			ctx.JSON(http.StatusBadRequest, models.Error{
+			ctx.JSON(http.StatusBadRequest, proxy_models.Error{
 				ErrorMessage: "No search query",
 				StatusCode:   http.StatusBadRequest,
 			})
@@ -30,11 +29,11 @@ func (handleManager *HandleManager) HandleSearchByName(apiManager *igdb.APIManag
 		if metadataList == nil {
 			newEntries, err := apiManager.GetGames(name)
 			if err != nil {
-				ctx.JSON(http.StatusBadRequest, models.Error{
-					ErrorMessage: "Error finding games on IGDB side",
+				ctx.JSON(http.StatusBadRequest, proxy_models.Error{
+					ErrorMessage: "Rate limit exceeded",
 					StatusCode:   http.StatusBadRequest,
 				})
-				log.Fatal(err)
+				fmt.Println(err)
 				return
 			}
 			if len(newEntries) > 0 {
@@ -44,10 +43,11 @@ func (handleManager *HandleManager) HandleSearchByName(apiManager *igdb.APIManag
 				}
 				metadataList = handleManager.CachingManager.GetMetadataListFromDBbyName(name)
 				ctx.JSON(http.StatusOK, metadataList)
+				fmt.Println("Added new items", metadataList)
 				return
 			}
-			ctx.JSON(http.StatusBadRequest, models.Error{
-				StatusCode: http.StatusBadRequest,
+			ctx.JSON(http.StatusBadRequest, proxy_models.Error{
+				StatusCode:   http.StatusBadRequest,
 				ErrorMessage: "No games found with by this name",
 			})
 			return
@@ -60,7 +60,7 @@ func (handleManager *HandleManager) HandleSearchByID(apiManager *igdb.APIManager
 		idString := ctx.Param("igdbid")
 		id, err := strconv.Atoi(idString)
 		if err != nil {
-			ctx.JSON(http.StatusBadRequest, models.Error{
+			ctx.JSON(http.StatusBadRequest, proxy_models.Error{
 				ErrorMessage: "Error parsing " + idString + " to int",
 				StatusCode:   http.StatusBadRequest,
 			})
