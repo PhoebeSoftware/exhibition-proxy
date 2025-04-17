@@ -11,8 +11,13 @@ import (
 )
 
 func main() {
+	//if err := godotenv.Load(); err != nil {
+	//	fmt.Println(err)
+	//	return
+	//}
+
 	proxy := exhibition_proxy_library.Proxy{
-		SettingsPath: "proxy-settings.json",
+		SettingsPath: "../proxy-settings.json",
 	}
 	proxy.Init()
 
@@ -28,7 +33,6 @@ func main() {
 
 func StartHttpServer(p *exhibition_proxy_library.Proxy, cachingManager *caching.CachingManager) {
 	router := gin.Default()
-
 	apiManager, err := igdb.NewAPI(p.Settings, p.SettingsManger)
 	if err != nil {
 		panic(err)

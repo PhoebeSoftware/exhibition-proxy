@@ -29,7 +29,7 @@ func (cachingManager *CachingManager) DBInit() error {
 	// Use that custom driver when opening the DB
 	db, err := gorm.Open(sqlite.Dialector{
 		DriverName: driverName,
-		DSN:        "file:cache.db?cache=shared&mode=rwc", // Can adjust DSN as needed
+		DSN:        "file:../cache.db?cache=shared&mode=rwc", // Can adjust DSN as needed
 	}, &gorm.Config{})
 
 	if err != nil {
@@ -55,7 +55,6 @@ func (cachingManager *CachingManager) GetMetadataListFromDBbyName(name string) [
     SELECT id FROM metadata
     WHERE name LIKE ? OR levenshtein(lower(name), lower(?)) <= ?`,
 	"%"+name+"%", name, 5).Scan(&ids)
-	fmt.Println(ids)
 	if len(ids) > 0 {
 		db.
 			Preload("Cover").

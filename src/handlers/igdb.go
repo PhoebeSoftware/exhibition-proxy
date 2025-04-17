@@ -6,6 +6,7 @@ import (
 	"github.com/PhoebeSoftware/exhibition-proxy-library/exhibition-proxy-library/igdb"
 	"github.com/PhoebeSoftware/exhibition-proxy-library/exhibition-proxy-library/models"
 	"github.com/gin-gonic/gin"
+	"log"
 	"net/http"
 	"strconv"
 )
@@ -32,6 +33,7 @@ func (handleManager *HandleManager) HandleSearchByName(apiManager *igdb.APIManag
 					ErrorMessage: "Error finding games on IGDB side",
 					StatusCode:   http.StatusBadRequest,
 				})
+				log.Fatal(err)
 				return
 			}
 			fmt.Println("Adding game to local db:", name)
