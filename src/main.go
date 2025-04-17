@@ -7,6 +7,9 @@ import (
 	"github.com/PhoebeSoftware/exhibition-proxy-library/exhibition-proxy-library"
 	"github.com/PhoebeSoftware/exhibition-proxy-library/exhibition-proxy-library/igdb"
 	"github.com/gin-gonic/gin"
+	"log"
+	"os"
+	"path/filepath"
 	"strconv"
 )
 
@@ -16,12 +19,21 @@ func main() {
 	//	return
 	//}
 
+	dataPath := filepath.Join("..", "data")
+
+	if err := os.MkdirAll(filepath.Dir(dataPath), 0655); err != nil {
+		log.Fatal(err)
+		return
+	}
+
 	proxy := exhibition_proxy_library.Proxy{
-		SettingsPath: "../proxy-settings.json",
+		SettingsPath: filepath.Join(dataPath, "proxy-settings.json"),
 	}
 	proxy.Init()
 
-	cachingManager := caching.CachingManager{}
+	cachingManager := caching.CachingManager{
+		CacheDBPath: filepath.Join(dataPath, "cache.db"),
+	}
 	err := cachingManager.DBInit()
 	if err != nil {
 		fmt.Println(err)

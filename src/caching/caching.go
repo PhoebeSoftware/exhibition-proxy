@@ -13,7 +13,8 @@ import (
 )
 
 type CachingManager struct {
-	DB *gorm.DB
+	CacheDBPath string
+	DB          *gorm.DB
 }
 
 func (cachingManager *CachingManager) DBInit() error {
@@ -29,7 +30,7 @@ func (cachingManager *CachingManager) DBInit() error {
 	// Use that custom driver when opening the DB
 	db, err := gorm.Open(sqlite.Dialector{
 		DriverName: driverName,
-		DSN:        "file:../cache.db?cache=shared&mode=rwc", // Can adjust DSN as needed
+		DSN:        "file:" + cachingManager.CacheDBPath + "?cache=shared&mode=rwc", // Can adjust DSN as needed
 	}, &gorm.Config{})
 
 	if err != nil {
