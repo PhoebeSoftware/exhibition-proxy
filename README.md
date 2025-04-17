@@ -6,9 +6,9 @@ The HTTP api responsible for handling game metadata requests for clients from IG
 - [Docker](https://www.docker.com/)
 
 # Setup
-- [Docker compose](docs/setup/docker_compose_setup) (Recommended)
-- [Docker run](docs/setup/docker_run_setup)
-- [Compile sources]()
+- [Docker compose](docs/setup/docker_compose_setup.md) (Recommended)
+- [Docker run](docs/setup/docker_run_setup.md)
+- [Compile sources](docs/setup/compile_sources_setup.md)
 
 
 # FAQ
