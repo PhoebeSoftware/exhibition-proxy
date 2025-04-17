@@ -3,5 +3,6 @@ services:
     image: "exhibition-proxy"
     ports:
       - "12345:12345"
+    # Its very useful to bind the data folder because the proxy-settings.yml is in /usr/local/app/data
     volumes:
       - ./data:/usr/local/app/data
