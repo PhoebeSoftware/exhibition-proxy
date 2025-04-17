@@ -20,8 +20,18 @@ cd exhibition-proxy
 ```bash
 docker build --tag 'exhibition-proxy' .
 ```
-4. Create a docker-compose.yml in chosen directory an example docker-compose.yml can be found [here](https://github.com/PhoebeSoftware/exhibition-proxy/blob/main/docker-compose.yml)
-
+4. Create a docker-compose.yml in the directory you want
+```yaml
+# Example docker-compose.yml
+services:
+  exhibition-proxy:
+    image: "exhibition-proxy"
+    ports:
+      - "12345:12345"
+    # Its very useful to bind the data folder because the proxy-settings.yml is in /usr/local/app/data
+    volumes:
+      - ./data:/usr/local/app/data
+```
 5. Run the docker compose.yml in the same directory to generate the config
 ```bash
 docker compose up -d
