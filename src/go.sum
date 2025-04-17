@@ -4,6 +4,8 @@ github.com/PhoebeSoftware/exhibition-proxy-library v0.0.0-20250415102328-9e1d87a
 github.com/PhoebeSoftware/exhibition-proxy-library v0.0.0-20250415102328-9e1d87af8c9a/go.mod h1:3QVDy8TSHBmjM1FrMLWeaaRUBqoxJdSYtiMOMeKKpLA=
 github.com/PhoebeSoftware/exhibition-proxy-library v0.0.0-20250417080419-9b7ed182ed67 h1:pQhKEJ4t5H2BT1mfVFCfuTomtdcwwAXwNRpqlDx+d3Y=
 github.com/PhoebeSoftware/exhibition-proxy-library v0.0.0-20250417080419-9b7ed182ed67/go.mod h1:3QVDy8TSHBmjM1FrMLWeaaRUBqoxJdSYtiMOMeKKpLA=
+github.com/PhoebeSoftware/exhibition-proxy-library v0.0.0-20250417161434-d3c9c588626f h1:c2zVWMHMVdlOeYfKpsL7cXzHJypns0oLjXFZkmPyaWQ=
+github.com/PhoebeSoftware/exhibition-proxy-library v0.0.0-20250417161434-d3c9c588626f/go.mod h1:3QVDy8TSHBmjM1FrMLWeaaRUBqoxJdSYtiMOMeKKpLA=
 github.com/agnivade/levenshtein v1.2.1 h1:EHBY3UOn1gwdy/VbFwgo4cxecRznFk7fKWN1KOX7eoM=
 github.com/agnivade/levenshtein v1.2.1/go.mod h1:QVVI16kDrtSuwcpd0p1+xMC6Z/VfhtCyDIjcwga4/DU=
 github.com/bytedance/sonic v1.13.2 h1:8/H1FempDZqC4VqjptGo14QQlJx8VdZJegxs6wwfqpQ=
