@@ -17,6 +17,7 @@ func main() {
 
 	cachingManager := caching.CachingManager{
 		CacheDBPath: filepath.Join(proxy.DataPath, "cache.db"),
+		ProxySettings: proxy.Settings,
 	}
 	err := cachingManager.DBInit()
 	if err != nil {

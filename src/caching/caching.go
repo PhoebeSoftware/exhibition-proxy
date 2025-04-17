@@ -5,16 +5,22 @@ import (
 	"errors"
 	"fmt"
 	"github.com/PhoebeSoftware/exhibition-proxy-library/exhibition-proxy-library/igdb"
+	"github.com/PhoebeSoftware/exhibition-proxy-library/exhibition-proxy-library/jsonUtils/jsonModels"
 	"github.com/agnivade/levenshtein"
 	"github.com/mattn/go-sqlite3"
 	"gorm.io/driver/sqlite"
 	"gorm.io/gorm"
 	"gorm.io/gorm/clause"
+	"gorm.io/gorm/logger"
+	"log"
+	"os"
+	"time"
 )
 
 type CachingManager struct {
 	CacheDBPath string
 	DB          *gorm.DB
+	ProxySettings *jsonModels.ProxySettings
 }
 
 func (cachingManager *CachingManager) DBInit() error {
@@ -27,11 +33,28 @@ func (cachingManager *CachingManager) DBInit() error {
 		},
 	})
 
-	// Use that custom driver when opening the DB
+	// Set logger to exclude record not found errors for less clutter in logs when adding new metadata to db
+	loggerConfig := logger.Config{
+		SlowThreshold: time.Second,
+		LogLevel: logger.Warn,
+		IgnoreRecordNotFoundError: true,
+		Colorful: true,
+	}
+
+	if cachingManager.ProxySettings.DebugMode {
+		loggerConfig.LogLevel = logger.Info
+		loggerConfig.IgnoreRecordNotFoundError = false
+	}
+
 	db, err := gorm.Open(sqlite.Dialector{
 		DriverName: driverName,
-		DSN:        "file:" + cachingManager.CacheDBPath + "?cache=shared&mode=rwc", // Can adjust DSN as needed
-	}, &gorm.Config{})
+		DSN:        "file:" + cachingManager.CacheDBPath + "?cache=shared&mode=rwc",
+	}, &gorm.Config{
+		Logger: logger.New(
+			log.New(os.Stdout, "\r\n", log.LstdFlags),
+			loggerConfig,
+		),
+	})
 
 	if err != nil {
 		return fmt.Errorf("error opening database: %w", err)
