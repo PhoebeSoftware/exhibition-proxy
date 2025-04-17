@@ -19,17 +19,24 @@ func main() {
 	//	return
 	//}
 
-	dataPath := filepath.Join("..", "data")
-
-	if err := os.MkdirAll(filepath.Dir(dataPath), 0655); err != nil {
+	dataPath := filepath.Join(".", "data")
+	if err := os.MkdirAll(filepath.Dir(dataPath), 0666); err != nil {
 		log.Fatal(err)
 		return
 	}
 
+	fmt.Println(filepath.Abs(dataPath))
 	proxy := exhibition_proxy_library.Proxy{
 		SettingsPath: filepath.Join(dataPath, "proxy-settings.json"),
 	}
 	proxy.Init()
+
+	if proxy.Settings.IgdbSettings.IgdbClient == "fill-in-pls" ||
+		proxy.Settings.IgdbSettings.IgdbSecret == "fill-in-pls" {
+		fmt.Println("Failed to launch: Please fill in the IGDB client and secret")
+		fmt.Println("Config file path: " + proxy.SettingsPath)
+		return
+	}
 
 	cachingManager := caching.CachingManager{
 		CacheDBPath: filepath.Join(dataPath, "cache.db"),
