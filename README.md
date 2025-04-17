@@ -8,4 +8,3 @@ The proxy responsible for handling game metadata requests for clients from IGDB.
 # Setup
 - [Docker compose](docs/setup/docker-compose-setup.md) (Recommended)
 - [Docker run](docs/setup/docker-run-setup.md)
-- [Build your own image and docker compose](docs/setup/docker-compose-own-image-setup.md)
