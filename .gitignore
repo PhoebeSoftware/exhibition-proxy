@@ -3,3 +3,5 @@ src/go.work.sum
 proxy-settings.json
 .idea
 cache.db
+.github
+docker-compose.yml
