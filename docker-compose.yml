@@ -1,0 +1,7 @@
+services:
+  exhibition-proxy:
+    image: "exhibition-proxy"
+    ports:
+      - "12345:12345"
+    volumes:
+      - ./data:/usr/local/app/data
