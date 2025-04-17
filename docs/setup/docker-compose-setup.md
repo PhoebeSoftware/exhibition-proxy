@@ -15,10 +15,18 @@ services:
     # Its very useful to bind the data folder because the proxy-settings.yml is in /usr/local/app/data
     volumes:
       - ./data:/usr/local/app/data
+    # If you want to change the directory where the data is stored you can do so via env
+    environment:
+      - DATA_PATH=/usr/local/app/data
 ```
 3. Run the docker compose.yml in the same directory to generate the config
 ```bash
 docker compose up
+```
+NOTE: Supposed to crash with this message:
+```bash
+Failed to launch: Please fill in the IGDB client and secret
+Config file path: data/proxy-settings.json
 ```
 4. Update the proxy-settings.yml
 ```json

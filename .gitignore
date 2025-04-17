@@ -4,3 +4,4 @@ proxy-settings.json
 .idea
 cache.db
 docker-compose.yml
+src/.env

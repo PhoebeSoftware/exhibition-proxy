@@ -7,21 +7,23 @@ import (
 	"github.com/PhoebeSoftware/exhibition-proxy-library/exhibition-proxy-library"
 	"github.com/PhoebeSoftware/exhibition-proxy-library/exhibition-proxy-library/igdb"
 	"github.com/gin-gonic/gin"
-	"log"
+	"github.com/joho/godotenv"
 	"os"
 	"path/filepath"
 	"strconv"
 )
 
 func main() {
-	//if err := godotenv.Load(); err != nil {
-	//	fmt.Println(err)
-	//	return
-	//}
+	godotenv.Load()
 
-	dataPath := filepath.Join(".", "data")
-	if err := os.MkdirAll(filepath.Dir(dataPath), 0666); err != nil {
-		log.Fatal(err)
+	dataPath := os.Getenv("DATA_PATH")
+	if dataPath == "" {
+		dataPath = filepath.Join(".", "data")
+	}
+
+	if err := os.MkdirAll(dataPath, 0777); err != nil {
+		fmt.Println(err)
+		fmt.Println("Could not create path: " + dataPath)
 		return
 	}
 
@@ -29,13 +31,6 @@ func main() {
 		SettingsPath: filepath.Join(dataPath, "proxy-settings.json"),
 	}
 	proxy.Init()
-
-	if proxy.Settings.IgdbSettings.IgdbClient == "fill-in-pls" ||
-		proxy.Settings.IgdbSettings.IgdbSecret == "fill-in-pls" {
-		fmt.Println("Failed to launch: Please fill in the IGDB client and secret")
-		fmt.Println("Config file path: " + proxy.SettingsPath)
-		return
-	}
 
 	cachingManager := caching.CachingManager{
 		CacheDBPath: filepath.Join(dataPath, "cache.db"),
