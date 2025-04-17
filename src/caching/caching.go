@@ -63,6 +63,12 @@ func (cachingManager *CachingManager) DBInit() error {
 		panic("db is nil DBInit()")
 	}
 
+	sqlDB, err := db.DB()
+	if err != nil {
+		panic("sqlDB is nil DBInit()")
+	}
+	sqlDB.SetMaxOpenConns(1)
+
 	err = db.AutoMigrate(&igdb.Metadata{})
 	if err != nil {
 		return err
@@ -78,7 +84,9 @@ func (cachingManager *CachingManager) GetMetadataListFromDBbyName(name string) [
 	db.Raw(`
     SELECT id FROM metadata
     WHERE name LIKE ? OR levenshtein(lower(name), lower(?)) <= ?`,
-	"%"+name+"%", name, 5).Scan(&ids)
+	"%"+name+"%", name, 2).Scan(&ids)
+	// Limit to 20 ids
+	ids = ids[:20]
 	if len(ids) > 0 {
 		db.
 			Preload("Cover").
@@ -108,6 +116,7 @@ func (cachingManager *CachingManager) GetMetadataFromDBbyID(id int) *igdb.Metada
 
 func (cachingManager *CachingManager) AddMetadataToDB(metadata *igdb.Metadata) {
 	db := cachingManager.DB
+
 	result := db.Clauses(clause.OnConflict{
 		Columns: []clause.Column{{Name: "id"}},
 		DoNothing: true,
