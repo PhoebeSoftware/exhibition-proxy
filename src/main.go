@@ -33,6 +33,7 @@ func StartHttpServer(p *exhibition_proxy_library.Proxy, cachingManager *caching.
 		gin.SetMode(gin.ReleaseMode)
 	}
 	router := gin.Default()
+	router.Use(rateLimter)
 	apiManager, err := igdb.NewAPI(p.Settings, p.SettingsManger)
 	if err != nil {
 		panic(err)
